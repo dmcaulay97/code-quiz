@@ -21,34 +21,7 @@ var qAndA = {
 var questions = Object.keys(qAndA);
 
 //Event listener makes the star button exavcute the game function. And allow the user to view the Leaderboard.
-leaderboard.addEventListener("click", function () {
-    quizInfo.remove();
-    start.remove();
-    question.textContent = "Leaderboard";
-    var leaderList = document.createElement("ul");
-    qArea.appendChild(leaderList);
-    var leaderboardLable = document.createElement("li");
-    leaderboardLable.textContent = "Name : Score";
-    leaderList.appendChild(leaderboardLable);
-    for (var i = 0; i < localStorage.length; i++) {
-        var leader = document.createElement("li");
-        leader.textContent = localStorage.key(i) + " : " + localStorage.getItem(localStorage.key(i))
-        leaderList.appendChild(leader);
-    }
-
-    var mainMenu = document.createElement("p");
-    mainMenu.textContent = "Return To Main Menu"
-    qArea.appendChild(mainMenu);
-    mainMenu.addEventListener("click", function () {
-        leaderList.remove();
-        mainMenu.remove();
-        question.textContent = "Coding Quiz";
-        qArea.appendChild(quizInfo);
-        qArea.appendChild(start);
-    });
-
-});
-
+leaderboard.addEventListener("click", leaderBoard);
 start.addEventListener("click", startQuiz);
 start.addEventListener("click", function () {
     let interval = setInterval(function () {
@@ -66,6 +39,83 @@ start.addEventListener("click", function () {
         }
     }, 1000);
 });
+
+function leaderBoard() {
+    leaderboard.removeEventListener("click", leaderBoard);
+    quizInfo.remove();
+    start.remove();
+    question.textContent = "Leaderboard";
+    var table = document.createElement("div");
+    table.setAttribute("id", "table");
+    qArea.appendChild(table);
+    var leaderList = document.createElement("tr");
+    for (var i = 0; i < 3; i++) {
+        var data = document.createElement("th");
+        if (i == 0) {
+            data.textContent = "Name";
+        } else if (i == 1) {
+            data.textContent = "Score";
+        } else {
+            data.textContent = "Delete";
+        }
+        leaderList.appendChild(data);
+    }
+
+    table.appendChild(leaderList);
+    scoreSorter = [];
+    for (var i = 0; i < localStorage.length; i++) {
+        var row = document.createElement("tr");
+        var dataName = document.createElement("th");
+        var dataScore = document.createElement("th");
+        var dataDelete = document.createElement("th");
+        dataDelete.setAttribute("id", "delete");
+        dataName.textContent = localStorage.key(i);
+        //console.log(dataName);
+        dataScore.textContent = localStorage.getItem(localStorage.key(i));
+        //console.log(dataName);
+        dataDelete.textContent = "x";
+        //console.log(dataName);
+        row.appendChild(dataName);
+        row.appendChild(dataScore);
+        row.appendChild(dataDelete);
+
+        if (scoreSorter.length == 0) {
+            scoreSorter.push(row);
+        } else {
+            for (var n = 0; n < scoreSorter.length; n++) {
+                if (row.children[1].textContent >= scoreSorter[n].children[1].textContent) {
+                    scoreSorter.splice(n, 0, row);
+                    break;
+                }
+            }
+        }
+    }
+
+    for (var i = 0; i < scoreSorter.length; i++) {
+        table.appendChild(scoreSorter[i]);
+    }
+
+    table.addEventListener("click", function (event) {
+        var deleteBtn = event.target;
+        if (deleteBtn.getAttribute("id") == "delete") {
+            localStorage.removeItem(deleteBtn.parentElement.children[0].textContent);
+            deleteBtn.parentElement.remove();
+        }
+    })
+
+    var mainMenu = document.createElement("p");
+    mainMenu.textContent = "Return To Main Menu"
+    qArea.appendChild(mainMenu);
+    mainMenu.addEventListener("click", function () {
+        leaderboard.addEventListener("click", leaderBoard);
+        table.remove();
+        mainMenu.remove();
+        question.textContent = "Coding Quiz";
+        qArea.appendChild(quizInfo);
+        qArea.appendChild(start);
+    });
+
+}
 
 //Random integer function too help randomize question order.
 function rand(max) {
