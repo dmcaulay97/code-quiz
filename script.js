@@ -236,4 +236,3 @@ function quizEnd() {
         questions = Object.keys(qAndA);
     })
 }
-
