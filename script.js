@@ -1,5 +1,4 @@
 //Creating varibles for initial htm elements that we need to intoract with.
-
 var leaderboard = document.querySelector("#leaderboard");
 var time = document.querySelector("#time");
 var start = document.querySelector("#start");
@@ -13,8 +12,16 @@ var timeRemaining = 100;
 
 //This objects stores all questions, answers and the true or false value of every answer option. This allows the quiz to be modified in one place.
 var qAndA = {
-    "What is 1+1?": { "1": "false", "2": "true", "3": "fals", "5": "false" },
-    "What color is the sky?": { "green": "false", "red": "false", "blue": "true", "yellow": "false" }
+    "What HTML tag is used to link JavaScript?": { "<script>": "true", "<link>": "false", "<JavaScript>": "false", "<header>": "false" },
+    "How do you change the content of the tag <p id = 'para'></p>?": { "document.getElementById('para').textContent = 'Hello!'": "true", "document.getElement('para').textContent = 'Hello!'": "false", "p.getElementById('para').textContent = 'Hello!'": "false", "document.getElementById('para') = 'Hello!'": "false" },
+    "What is the proper syntax for refering to an external script file, 'script.js'?": { "<script src='script.js'>": "true", "<script href='script.js'>": "false", "<link src='script.js'>": "false", "<script id='script.js'>": "false" },
+    "An external JavaScript file must contain a <script> tag.": { "False": "true", "True": "false" },
+    "What is the proper syntax for an if statement?": { "if (x == y){}": "true", "if x == y {}": "false", "if (x == y) then {}": "false", "if (x is the same as y){}": "false" },
+    "How do you create a function in JavaScript?": { "function myFunction(){}": "true", "var function myFunction(){}": "false", "function myFunction{}": "false", "func is myFunction(){}": "false" },
+    "How do you call a function in JavaScript?": { "myFunction()": "true", "call myFunction": "false", "myFunction": "false", "myFunction{call}": "false" },
+    "JavaSript is the same as Java?": { "False": "true", "True": "false" },
+    "What is the syntax for a comment in JavaScript?": { "//comment": "true", "/*comment*/": "false", "<!--comment-->": "false", "?comment?": "false" },
+    "How do you define an array in JavaScript?": { "var array = []": "true", "var array = {}": "false", "var array = ()": "false", "var array = ''": "false" },
 };
 
 //Here we create an array containing only the questions.
@@ -62,7 +69,7 @@ function leaderBoard() {
     }
 
     table.appendChild(leaderList);
-    scoreSorter = [];
+    var scoreSorter = [];
     for (var i = 0; i < localStorage.length; i++) {
         var row = document.createElement("tr");
         var dataName = document.createElement("th");
@@ -83,11 +90,12 @@ function leaderBoard() {
             scoreSorter.push(row);
         } else {
             for (var n = 0; n < scoreSorter.length; n++) {
-                if (row.children[1].textContent >= scoreSorter[n].children[1].textContent) {
+                if (parseInt(row.children[1].textContent) >= parseInt(scoreSorter[n].children[1].textContent)) {
                     scoreSorter.splice(n, 0, row);
                     break;
                 }
             }
+            scoreSorter.splice(n, 0, row);
         }
     }
 
