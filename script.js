@@ -47,12 +47,24 @@ start.addEventListener("click", function () {
     }, 1000);
 });
 
+
+function mainmenu() {
+    leaderboard.addEventListener("click", leaderBoard);
+    leaderboard.removeEventListener("click", mainmenu)
+    table.remove();
+    document.querySelector('#mainMenu').remove();
+    question.textContent = "Coding Quiz";
+    qArea.appendChild(quizInfo);
+    qArea.appendChild(start);
+}
+
 function leaderBoard() {
     leaderboard.removeEventListener("click", leaderBoard);
+    leaderboard.addEventListener("click", mainmenu);
     quizInfo.remove();
     start.remove();
     question.textContent = "Leaderboard";
-    var table = document.createElement("div");
+    var table = document.createElement("table");
     table.setAttribute("id", "table");
     qArea.appendChild(table);
     var leaderList = document.createElement("tr");
@@ -72,9 +84,9 @@ function leaderBoard() {
     var scoreSorter = [];
     for (var i = 0; i < localStorage.length; i++) {
         var row = document.createElement("tr");
-        var dataName = document.createElement("th");
-        var dataScore = document.createElement("th");
-        var dataDelete = document.createElement("th");
+        var dataName = document.createElement("td");
+        var dataScore = document.createElement("td");
+        var dataDelete = document.createElement("td");
         dataDelete.setAttribute("id", "delete");
         dataName.textContent = localStorage.key(i);
         //console.log(dataName);
@@ -113,15 +125,10 @@ function leaderBoard() {
 
     var mainMenu = document.createElement("p");
     mainMenu.textContent = "Return To Main Menu"
+    mainMenu.setAttribute("class", "btn")
+    mainMenu.setAttribute("id", "mainMenu")
     qArea.appendChild(mainMenu);
-    mainMenu.addEventListener("click", function () {
-        leaderboard.addEventListener("click", leaderBoard);
-        table.remove();
-        mainMenu.remove();
-        question.textContent = "Coding Quiz";
-        qArea.appendChild(quizInfo);
-        qArea.appendChild(start);
-    });
+    mainMenu.addEventListener("click", mainmenu);
 
 }
 
@@ -132,6 +139,7 @@ function rand(max) {
 
 //This function controls the functionality of te game.
 function startQuiz() {
+    leaderboard.removeEventListener("click", leaderBoard);
     if (qNumber == 0) {
         quizInfo.remove();
         start.remove();
@@ -179,6 +187,7 @@ function startQuiz() {
         var aIndex = rand(answerRandomizer.length);
         answer.textContent = answers[answerRandomizer[aIndex]];
         answer.setAttribute("data-correct", correct[answerRandomizer[aIndex]]);
+        answer.setAttribute("class", "btn answer");
         document.querySelector("#aList").appendChild(answer);
         answerRandomizer.splice(aIndex, 1);
     }
@@ -204,6 +213,7 @@ function quizEnd() {
 
     var submit = document.createElement("p");
     submit.setAttribute("id", "submit");
+    submit.setAttribute("class", "btn")
     submit.textContent = "Submit";
     qArea.appendChild(submit);
 
@@ -215,6 +225,7 @@ function quizEnd() {
         instructions.remove();
         username.remove();
         submit.remove();
+        leaderboard.addEventListener("click", leaderBoard);
 
         qArea.appendChild(quizInfo);
         qArea.appendChild(start);
@@ -225,3 +236,4 @@ function quizEnd() {
         questions = Object.keys(qAndA);
     })
 }
+
